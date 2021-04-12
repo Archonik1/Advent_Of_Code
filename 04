@@ -1,0 +1,153 @@
+import csv
+
+
+# --------------------- FIND ONLY TOTAL NUMBER OF PASSANGERS ----------
+# ----- need for last passengers information check
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+    total_number_of_passangers = 0
+    #count number of passangers
+    for row in data:
+        if not row:
+            total_number_of_passangers +=1
+
+# ------------------------ MAIN FUNCTION FOR ALL PASSANGERS - 1 (LAST ONE IS OUT OF SCOPE FOR CHECK FUNCTION = TOO LAZY :)  --------------------------------
+
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+    row_number = 0
+    passanger_number = 0
+    individual_dictionary = {}
+    total_valid_passports = 0
+
+
+    def heigh_function(input_height):
+        length_of_string = len(input_height)
+        metric_system = input_height[-2:]
+        if metric_system not in ("cm","in"):
+            return False
+        height_number = int(input_height[:length_of_string - 2])
+        if metric_system == "cm":
+            if height_number in range(150, 193 + 1):
+                return True
+        elif height_number in range(59, 76 + 1):
+            return True
+        else:
+            return False
+
+
+    def hcl_function(input_hcl):
+        count = 0
+        first_char = input_hcl[:1]
+        lenght_of_string_without_first_char = len(input_hcl) - 1
+        if ord(first_char) == 35 and lenght_of_string_without_first_char == 6:
+            for item in range(1, len(input_hcl)):
+                try:
+                    if ord(input_hcl[item]) in range(65, 90 + 1) or \
+                            ord(input_hcl[item]) in range(97, 122 + 1) or \
+                            ord(input_hcl[item]) in range(48, 57 + 1):
+                        count += 1
+                except:
+                    return False
+            if count == 6:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def eye_color_function(input_color):
+        if input_color in ("amb","blu","brn","gry","grn","hzl","oth"):
+            return True
+        else:
+            return False
+
+    def passport_function(input_passport):
+        count = 0
+        for item in input_passport:
+            if ord(item) in range(48, 57 + 1):
+                count +=1
+        if count == 9 and len(input_passport) == 9:
+            return True
+        else:
+            return False
+
+
+    # goes row by row in sample file
+    for row in data:
+        # checks if there is only space on the row, if yes it it now it reach a second passanger and is reviewing all the stored value in dictionary a
+        if not row:
+            passanger_number += 1
+            # -------->>>> continue of the program from last ROW
+            # checking if all the keys are part of the passanger dictionary
+            # "cid" key should be ignored, so if the passanger key does not contains "cid" it will ignore it as this information is not important
+            if set(("byr", "iyr","eyr","hgt","hcl","ecl","pid")) <= individual_dictionary.keys():
+                if int(individual_dictionary["byr"]) in range(1920,2002+1) and \
+                   int(individual_dictionary["iyr"]) in range(2010,2020 + 1) and \
+                   int(individual_dictionary["eyr"]) in range(2020, 2030 + 1) and \
+                   heigh_function(individual_dictionary["hgt"]) and \
+                   hcl_function(individual_dictionary["hcl"]) and \
+                   eye_color_function(individual_dictionary["ecl"]) and \
+                   passport_function(individual_dictionary["pid"]):
+
+                        #print("All values in dictionary - VALID PASSPORT")
+                        total_valid_passports +=1
+                #print(total_valid_passports)
+
+
+            else:
+                #print("Missing some value in dictinoary - INVALID PASSPORT")
+                "nothing"
+            #once all checking is being processed the dictionary is being cleared and is prepared to get new values in the bellow cycle
+            individual_dictionary.clear()
+            #print("------------NEW PASSANGER--------")
+        # this part will iterate through the rows related to only one passanger
+        else:
+            # split hte row by space to get more lists
+            row[row_number] = row[row_number].split(" ")
+            #iterate through each item in the list
+            for item in row[row_number]:
+                #split the list to key and value so it could be assigned to dictionary
+                item = item.split(":")
+                #assigning item to the dictionary
+                individual_dictionary[item[0]]= item[1]
+                # once all key value pairs are being assigned to dictionary it goes check if all the needed values are in dictionary ->>>>>>>>> check the code above
+                #print(individual_dictionary)
+
+# --------------------------------CHECK OF LAST PASSANGER INFORMATION I was lazy to try to implement it into main code ---------------------------------------
+
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+    row_number = 0
+    passanger_number = 0
+    individual_dictionary = {}
+
+    for row in data:
+        if not row:
+            passanger_number += 1
+        if total_number_of_passangers == passanger_number:
+            if not(not row):
+                row[row_number] = row[row_number].split(" ")
+                # iterate through each item in the list
+                for item in row[row_number]:
+                    # split the list to key and value so it could be assigned to dictionary
+                    item = item.split(":")
+                    # assigning item to the dictionary
+                    individual_dictionary[item[0]] = item[1]
+                    # once all key value pairs are being assigned to dictionary it goes check if all the needed values are in dictionary ->>>>>>>>> check the code above
+                    if set(("byr", "iyr","eyr","hgt","hcl","ecl","pid")) <= individual_dictionary.keys():
+                        if int(individual_dictionary["byr"]) in range(1920, 2002 + 1) and \
+                           int(individual_dictionary["iyr"]) in range(2010, 2020 + 1) and \
+                           int(individual_dictionary["eyr"]) in range(2020, 2030 + 1) and \
+                           heigh_function(individual_dictionary["hgt"]) and \
+                           hcl_function(individual_dictionary["hcl"]) and \
+                           eye_color_function(individual_dictionary["ecl"]) and \
+                           passport_function(individual_dictionary["pid"]):
+                            # print("All values in dictionary - VALID PASSPORT")
+                                total_valid_passports += 1
+                    else:
+                        #print("Missing some value in dictinoary - INVALID PASSPORT")
+                        "nothing"
+
+print(total_valid_passports)
+
