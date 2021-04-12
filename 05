@@ -1,0 +1,99 @@
+import csv
+
+
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+
+    # max seating number
+    final_list_of_seats = []
+    final_list_row = []
+
+    for item in data:
+
+        # variables for row numbers
+        row_number = 128
+        row_number_divisior = 128
+        final_winner_row = 0
+        # variables for column number
+        column_number = 8
+        column_number_divisor = 8
+        # final winning seat number
+        seat_number_winner = 0
+        # common variable used in both cycles
+        upper_bound = 0
+        lower_bound = 0
+        cycle_count = 0
+
+
+        for word in item:
+            #--------FIRST PART OF THE SCRIPT -> FIND THE SITTING ROW---------------
+            #--------need to check first 7 letters in the string -------------------
+            for letter in range(7):
+                cycle_count +=1
+                if word[letter] == "F":
+                    row_number_divisior /=2
+                    upper_bound = lower_bound + row_number_divisior
+                    lower_bound = lower_bound
+                    final_winner_row = lower_bound
+                elif word[letter] == "B" and cycle_count == 1:
+                    row_number_divisior /= 2
+                    upper_bound = row_number
+                    lower_bound = row_number - row_number_divisior
+                else:
+                    row_number_divisior /=2
+                    upper_bound = upper_bound
+                    lower_bound = upper_bound - row_number_divisior
+                    final_winner_row = lower_bound
+            # --------SECOND PART OF THE SCRIPT -> FIND THE FINAL COLUMN---------------
+            # --------Need to check the last 3 letters in the string ---------------------------
+
+            #reset of variable to be able to reuse them
+            upper_bound = 0
+            lower_bound = 0
+            cycle_count = 0
+            for letter in range(7,10):
+               cycle_count +=1
+               if word[letter] == "L":
+                   column_number_divisor /=2
+                   upper_bound = lower_bound + column_number_divisor
+                   lower_bound = lower_bound
+               elif word[letter] == "R" and cycle_count == 1:
+                   column_number_divisor /= 2
+                   upper_bound = column_number
+                   lower_bound = column_number - column_number_divisor
+               else:
+                   column_number_divisor /= 2
+                   upper_bound = upper_bound
+                   lower_bound = upper_bound - column_number_divisor
+
+            # --------FINAL PART OF GETTING SEAT NUMBER ---------------------------------------
+
+            seat_number_winner = int(final_winner_row*8 + lower_bound)
+            final_list_of_seats.append(seat_number_winner)
+            final_list_of_seats.sort()
+
+            # -------- finding the missing spot ---------------------------
+            #using list comprehension
+    missing_seats_list = [x for x in range(final_list_of_seats[0],final_list_of_seats[-1]+1)
+                                if x not in final_list_of_seats]
+
+
+
+    print(f"Free seets is {missing_seats_list}")
+
+
+    # ------- getting max number from all seat numbers-------------------------------------------
+    print(f"Max Row is {max(final_list_of_seats)}")
+
+
+
+
+
+
+
+
+
+
+
+
+
