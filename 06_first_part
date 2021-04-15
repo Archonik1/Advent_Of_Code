@@ -1,0 +1,72 @@
+import csv
+
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+
+    #variable set up
+    unique_list = []
+    passing_list = []
+    count_passanger = 0
+    passanger_dictionry = {}
+    final_value = 0
+    # goes row by row in sample file
+
+    # split all items in dictionarie's list -> this is second part of the program -> first part is in bellow block which will create a dictionary
+    def list_iteration(inserted_list):
+        #clear always the list value for each new passanger
+        unique_list.clear()
+        #loop trough each item in the given list
+        for i in range(len(inserted_list)):
+            for x in inserted_list[i]:
+                unique_list.append(x)
+        #due to mutability of the list you need to create a copy of the unique list, otherwise all the value will be pointing out to same spot = to last iterated value
+        passing_list = unique_list.copy()
+        #remove duplicates by converting list to set
+        passing_list = set(passing_list)
+        #to be able to use the list as passing_list as list it needs to be converted back to list
+        passing_list = list(passing_list)
+        #pass back the final split value without duplicates
+        return passing_list
+
+
+
+    for row in data:
+
+        if not row:
+            #just creating unique ID for each passanger
+            count_passanger +=1
+        else:
+            for i in row:
+                #
+                if count_passanger in passanger_dictionry:
+                    passanger_dictionry[count_passanger].append(i)
+                    passanger_dictionry[count_passanger] = list_iteration(passanger_dictionry[count_passanger])
+                #need to first setup each passanger ID into the dictionary, for first row of itteration -> for any additional iteration the above if statement will be used
+                else:
+                    passanger_dictionry[count_passanger] = []
+                    passanger_dictionry[count_passanger].append(i)
+                    #passing the list into defined function to get back the cleaned list with unique information
+                    passanger_dictionry[count_passanger] = list_iteration(passanger_dictionry[count_passanger])
+
+
+    #get the final number
+
+    for key,value in passanger_dictionry.items():
+        final_value += len(value)
+
+    print(final_value)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
