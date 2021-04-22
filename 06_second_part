@@ -1,0 +1,99 @@
+import csv
+
+with open("Passports.txt", "r") as file:
+    data = csv.reader(file)
+
+    #variable set up
+    unique_list = []
+    passing_list = []
+    count_passanger = 0
+    count_groups = 0
+    group_dictionary = {}
+    passanger_dictionary = {}
+    passing_dictionary = {}
+    final_value = 0
+    # goes row by row in sample file
+
+    # split all items in dictionarie's list -> this is second part of the program -> first part is in bellow block which will create a dictionary
+    def list_iteration(inserted_string):
+        #clear always the list value for each new passanger
+        unique_list.clear()
+        #loop trough each item in the given list to get signle item
+        for i in range(len(inserted_string)):
+            for x in inserted_string[i]:
+                unique_list.append(x)
+        #due to mutability of the list you need to create a copy of the unique list, otherwise all the value will be pointing out to same spot = to last iterated value
+        passing_list = unique_list.copy()
+        passanger_dictionary[count_passanger] = []
+        passanger_dictionary[count_passanger] = passing_list
+        #same as for list, dictionary is mutable object
+        passing_dictionary = passanger_dictionary.copy()
+        #it will return dictionary with the list which will be then nested inside the group dictionary
+        return passing_dictionary
+
+
+    # First main part of the program
+    for row in data:
+
+
+        if not row:
+            #just creating unique ID for each passanger
+            count_groups +=1
+            passanger_dictionary.clear()
+            # zero down the passanger count to get same standart level of keys for inner dictionary
+            count_passanger = 0
+        else:
+            count_passanger += 1
+
+            for i in row:
+                if count_groups in group_dictionary:
+                    group_dictionary[count_groups] = list_iteration(i)
+
+                #need to first setup each passanger ID into the dictionary, for first row of itteration -> for any additional iteration the above if statement will be used
+                else:
+                    group_dictionary[count_groups] = {}
+                    group_dictionary[count_groups] = list_iteration(i)
+
+
+    #final dictionary
+    print(group_dictionary)
+
+    #second part of program
+
+    for key,value in group_dictionary.items():
+        #print("new group")
+        #len value count the number of responses in each group -> if 1 the all the answers are unique
+        if len(value) == 1:
+            #this will access the list in dictionary
+            for x in value.values():
+                #count all the items in the list and add it to final value for final count
+                final_value += len(x)
+
+
+        else:
+            #print(len(value))
+            #print("new group")
+            for item in range(len(value)-1):
+                new_value = set(value[item + 1])
+                #print(new_value)
+                #print("----")
+                new_value = new_value & set(value[item+2])
+                #print(new_value)
+                #print(new_value)
+                if item+2 == len(value):
+                    final_value += len(new_value)
+                    #print(final_value)
+
+
+
+            #for i in value:
+
+
+
+
+
+    print(final_value)
+
+
+
+
