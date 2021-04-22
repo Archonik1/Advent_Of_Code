@@ -71,18 +71,16 @@ with open("Passports.txt", "r") as file:
 
 
         else:
-            #print(len(value))
-            #print("new group")
+
             for item in range(len(value)-1):
-                new_value = set(value[item + 1])
-                #print(new_value)
-                #print("----")
-                new_value = new_value & set(value[item+2])
-                #print(new_value)
-                #print(new_value)
+                if item < 1:
+                    set_value = set(value[item + 1]) & set(value[item+2])
+                else:
+                    set_value = set_value & set(value[item+2])
+
                 if item+2 == len(value):
-                    final_value += len(new_value)
-                    #print(final_value)
+                    final_value += len(set_value)
+
 
 
 
@@ -93,7 +91,3 @@ with open("Passports.txt", "r") as file:
 
 
     print(final_value)
-
-
-
-
