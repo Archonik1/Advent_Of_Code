@@ -1,0 +1,12 @@
+with open("Input_Data") as file:
+    correct_passwords = 0
+    for line in file:
+        condition, password = line.split(":")
+        parameters,letter = condition[0:len(condition)-2],condition[len(condition)-1]
+        first,second = parameters.split("-")
+        password = password.replace(" ", "")
+        final_set = set([password[int(first)-1],password[int(second)-1]])
+        if (letter in final_set) and len(final_set) == 2:
+            correct_passwords +=1
+
+    print(correct_passwords)
