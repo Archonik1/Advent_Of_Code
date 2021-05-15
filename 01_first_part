@@ -1,0 +1,13 @@
+with open("Input_Data") as file:
+    new_list = [s.replace("\n", "") for s in file.readlines()]
+    comparison_list = new_list.copy()
+    for item in new_list:
+        for comp_item in comparison_list:
+            if (int(item) + int(comp_item)) == 2020:
+                first_number = int(item)
+                second_number = int(comp_item)
+
+    multiplication = first_number * second_number
+
+
+    print(f"first number is: {first_number} and second number is: {second_number} and its multiplication is: {multiplication}")
