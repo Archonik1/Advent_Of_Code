@@ -1,0 +1,28 @@
+with open("Input_Data") as file:
+    #it will read just first line of the file
+    first_line = file.readline()
+    multiplicator = 1
+    count_of_trees = 0
+    starting_position = 0
+    coordinate_x = 3
+    coordinate_y = 1
+    for line in file:
+        line_new = line.rstrip() * multiplicator
+        positin_length = starting_position+coordinate_x
+        length_of_line = len(line_new)
+        if (length_of_line-positin_length) > 0:
+            result = line_new[starting_position+coordinate_x]
+            #print(f"first cycle {starting_position+coordinate_x} and char is {result}")
+            starting_position +=3
+            if result == "#":
+                count_of_trees +=1
+        else:
+            multiplicator +=1
+            line_new = line.rstrip() * multiplicator
+            result = line_new[starting_position + coordinate_x]
+            #print(f"else cycle {starting_position+coordinate_x} and char is {result}")
+            starting_position +=3
+            if result == "#":
+                count_of_trees +=1
+
+    print(count_of_trees)
